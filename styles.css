@@ -43,11 +43,6 @@ body {
   padding: 20px;
 }
 
-.inputs {
-  display: grid;
-  gap: 8px;
-}
-
 h1 {
   font-size: 20px;
   font-weight: 600;
