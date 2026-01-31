@@ -1,6 +1,14 @@
 const canvas = document.getElementById("scene");
 const video = document.getElementById("video");
-const videoInput = document.getElementById("video-input");
+const videoInputs = [
+  { key: "front", label: "Перед", input: document.getElementById("video-front") },
+  { key: "right", label: "Право", input: document.getElementById("video-right") },
+  { key: "back", label: "Назад", input: document.getElementById("video-back") },
+  { key: "left", label: "Лево", input: document.getElementById("video-left") },
+  { key: "up", label: "Верх", input: document.getElementById("video-up") },
+  { key: "down", label: "Низ", input: document.getElementById("video-down") },
+];
+const activeFaceLabel = document.getElementById("active-face");
 const playButton = document.getElementById("play-button");
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -34,9 +42,67 @@ const state = {
   pointerY: 0,
   lastX: 0,
   lastY: 0,
+  targetRotationX: 0,
+  targetRotationY: 0,
+  activeFace: "front",
 };
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+const stepAngle = Math.PI / 2;
+const lerp = (start, end, alpha) => start + (end - start) * alpha;
+const normalizeAngle = (value) => {
+  const full = Math.PI * 2;
+  return ((value % full) + full) % full;
+};
+
+const sources = {};
+
+function updateActiveFaceLabel() {
+  const match = videoInputs.find((item) => item.key === state.activeFace);
+  if (match) {
+    activeFaceLabel.textContent = match.label;
+  }
+}
+
+function setActiveFace(key) {
+  if (state.activeFace === key) return;
+  state.activeFace = key;
+  updateActiveFaceLabel();
+  if (sources[key]) {
+    video.src = sources[key];
+    video.load();
+    video.addEventListener(
+      "loadedmetadata",
+      () => {
+        attemptPlay();
+      },
+      { once: true }
+    );
+  }
+}
+
+function snapRotation() {
+  const snappedX = clamp(
+    Math.round(sphere.rotation.x / stepAngle) * stepAngle,
+    -stepAngle,
+    stepAngle
+  );
+  const snappedY = Math.round(sphere.rotation.y / stepAngle) * stepAngle;
+  state.targetRotationX = snappedX;
+  state.targetRotationY = snappedY;
+
+  const normalizedY = normalizeAngle(snappedY);
+  const stepIndex = Math.round(normalizedY / stepAngle) % 4;
+
+  if (snappedX >= stepAngle * 0.5) {
+    setActiveFace("down");
+  } else if (snappedX <= -stepAngle * 0.5) {
+    setActiveFace("up");
+  } else {
+    const sideMap = ["front", "right", "back", "left"];
+    setActiveFace(sideMap[stepIndex]);
+  }
+}
 
 function onPointerDown(event) {
   if (event.pointerType === "touch") {
@@ -61,16 +127,18 @@ function onPointerMove(event) {
   state.lastY = event.clientY;
   sphere.rotation.y += deltaX * 0.005;
   sphere.rotation.x += deltaY * 0.005;
-  sphere.rotation.x = clamp(sphere.rotation.x, -Math.PI / 2, Math.PI / 2);
+  sphere.rotation.x = clamp(sphere.rotation.x, -stepAngle, stepAngle);
 }
 
 function onPointerUp() {
   state.isDragging = false;
+  snapRotation();
 }
 
 canvas.addEventListener("pointerdown", onPointerDown, { passive: false });
 window.addEventListener("pointermove", onPointerMove, { passive: false });
 window.addEventListener("pointerup", onPointerUp);
+window.addEventListener("pointercancel", onPointerUp);
 
 function attemptPlay() {
   if (!video.src) return;
@@ -82,19 +150,16 @@ function attemptPlay() {
   }
 }
 
-videoInput.addEventListener("change", (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-  const url = URL.createObjectURL(file);
-  video.src = url;
-  video.load();
-  video.addEventListener(
-    "loadedmetadata",
-    () => {
-      attemptPlay();
-    },
-    { once: true }
-  );
+videoInputs.forEach(({ key, input }) => {
+  if (!input) return;
+  input.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    sources[key] = URL.createObjectURL(file);
+    if (!video.src) {
+      setActiveFace(key);
+    }
+  });
 });
 
 playButton.addEventListener("click", () => {
@@ -111,8 +176,22 @@ function onResize() {
 window.addEventListener("resize", onResize);
 
 function animate() {
+  if (!state.isDragging) {
+    sphere.rotation.x = lerp(
+      sphere.rotation.x,
+      state.targetRotationX,
+      0.12
+    );
+    sphere.rotation.y = lerp(
+      sphere.rotation.y,
+      state.targetRotationY,
+      0.12
+    );
+  }
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
 
+updateActiveFaceLabel();
+snapRotation();
 animate();
