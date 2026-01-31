@@ -9,14 +9,14 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
-  75,
+  45,
   window.innerWidth / window.innerHeight,
   0.1,
-  2000
+  100
 );
+camera.position.z = 3.2;
 
-const geometry = new THREE.SphereGeometry(500, 64, 64);
-geometry.scale(-1, 1, 1);
+const geometry = new THREE.SphereGeometry(1.5, 96, 96);
 
 const texture = new THREE.VideoTexture(video);
 texture.minFilter = THREE.LinearFilter;
@@ -26,11 +26,10 @@ texture.colorSpace = THREE.SRGBColorSpace;
 const material = new THREE.MeshBasicMaterial({ map: texture });
 const sphere = new THREE.Mesh(geometry, material);
 scene.add(sphere);
+renderer.setClearColor(0xffffff, 1);
 
 const state = {
   isDragging: false,
-  lon: 0,
-  lat: 0,
   pointerX: 0,
   pointerY: 0,
   lastX: 0,
@@ -38,18 +37,6 @@ const state = {
 };
 
 const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
-
-function updateCamera() {
-  state.lat = clamp(state.lat, -85, 85);
-  const phi = THREE.MathUtils.degToRad(90 - state.lat);
-  const theta = THREE.MathUtils.degToRad(state.lon);
-
-  const target = new THREE.Vector3();
-  target.x = 500 * Math.sin(phi) * Math.cos(theta);
-  target.y = 500 * Math.cos(phi);
-  target.z = 500 * Math.sin(phi) * Math.sin(theta);
-  camera.lookAt(target);
-}
 
 function onPointerDown(event) {
   if (event.pointerType === "touch") {
@@ -72,8 +59,9 @@ function onPointerMove(event) {
   const deltaY = event.clientY - state.lastY;
   state.lastX = event.clientX;
   state.lastY = event.clientY;
-  state.lon += deltaX * 0.15;
-  state.lat += deltaY * 0.15;
+  sphere.rotation.y += deltaX * 0.005;
+  sphere.rotation.x += deltaY * 0.005;
+  sphere.rotation.x = clamp(sphere.rotation.x, -Math.PI / 2, Math.PI / 2);
 }
 
 function onPointerUp() {
@@ -123,7 +111,6 @@ function onResize() {
 window.addEventListener("resize", onResize);
 
 function animate() {
-  updateCamera();
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
