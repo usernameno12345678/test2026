@@ -14,9 +14,9 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   100
 );
-camera.position.z = 3.2;
+camera.position.z = 3.6;
 
-const geometry = new THREE.SphereGeometry(1.5, 96, 96);
+const geometry = new THREE.SphereGeometry(1.1, 96, 96);
 
 const texture = new THREE.VideoTexture(video);
 texture.minFilter = THREE.LinearFilter;
