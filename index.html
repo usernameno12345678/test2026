@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>360° Видео внутри сферы</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="ui">
+      <div class="panel">
+        <h1>360° Видео</h1>
+        <p>
+          Загрузите горизонтальное или вертикальное видео с телефона. Видео
+          проигрывается внутри сферы — можно крутить мышью или пальцем.
+        </p>
+        <label class="button">
+          Выбрать видео
+          <input id="video-input" type="file" accept="video/*" />
+        </label>
+        <button id="play-button" class="button secondary" type="button">
+          Запустить видео
+        </button>
+        <p class="hint">
+          Если автозапуск заблокирован — нажмите «Запустить видео» или кликните по
+          сцене.
+        </p>
+      </div>
+    </div>
+    <canvas id="scene"></canvas>
+
+    <video
+      id="video"
+      playsinline
+      muted
+      loop
+      preload="auto"
+      crossorigin="anonymous"
+    ></video>
+
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>

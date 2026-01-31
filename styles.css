@@ -1,0 +1,98 @@
+:root {
+  color-scheme: dark;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #050505;
+  color: #f4f4f4;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#scene {
+  display: block;
+  height: 100vh;
+  touch-action: none;
+  width: 100vw;
+}
+
+#ui {
+  left: 0;
+  padding: 24px;
+  position: fixed;
+  top: 0;
+  width: min(420px, 90vw);
+  z-index: 2;
+}
+
+.panel {
+  backdrop-filter: blur(8px);
+  background: rgba(15, 15, 15, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+p {
+  font-size: 14px;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+.button {
+  align-items: center;
+  background: #1e90ff;
+  border: none;
+  border-radius: 999px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 14px;
+  font-weight: 600;
+  gap: 8px;
+  justify-content: center;
+  padding: 10px 16px;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.button.secondary {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.button:hover {
+  transform: translateY(-1px);
+}
+
+.button input {
+  display: none;
+}
+
+.hint {
+  font-size: 12px;
+  opacity: 0.65;
+}
+
+@media (max-width: 600px) {
+  #ui {
+    padding: 16px;
+  }
+
+  .panel {
+    padding: 16px;
+  }
+}
