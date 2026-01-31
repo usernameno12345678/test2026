@@ -26,7 +26,7 @@ texture.colorSpace = THREE.SRGBColorSpace;
 const material = new THREE.MeshBasicMaterial({ map: texture });
 const sphere = new THREE.Mesh(geometry, material);
 scene.add(sphere);
-renderer.setClearColor(0xffffff, 1);
+renderer.setClearColor(0xee1c25, 1);
 
 const state = {
   isDragging: false,
