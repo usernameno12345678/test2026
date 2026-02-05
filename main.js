@@ -1,7 +1,5 @@
 const canvas = document.getElementById("scene");
 const video = document.getElementById("video");
-const videoInput = document.getElementById("video-input");
-const playButton = document.getElementById("play-button");
 
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -26,7 +24,7 @@ texture.colorSpace = THREE.SRGBColorSpace;
 const material = new THREE.MeshBasicMaterial({ map: texture });
 const sphere = new THREE.Mesh(geometry, material);
 scene.add(sphere);
-renderer.setClearColor(0xff0000, 1);
+renderer.setClearColor(0x000000, 0);
 
 const state = {
   isDragging: false,
@@ -77,29 +75,10 @@ function attemptPlay() {
   const playPromise = video.play();
   if (playPromise && typeof playPromise.catch === "function") {
     playPromise.catch(() => {
-      // Autoplay blocked; user can press the button.
+      // Autoplay blocked; will retry on first interaction.
     });
   }
 }
-
-videoInput.addEventListener("change", (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-  const url = URL.createObjectURL(file);
-  video.src = url;
-  video.load();
-  video.addEventListener(
-    "loadedmetadata",
-    () => {
-      attemptPlay();
-    },
-    { once: true }
-  );
-});
-
-playButton.addEventListener("click", () => {
-  attemptPlay();
-});
 
 function onResize() {
   const { innerWidth, innerHeight } = window;
@@ -110,9 +89,14 @@ function onResize() {
 
 window.addEventListener("resize", onResize);
 
+window.addEventListener("pointerdown", () => {
+  attemptPlay();
+}, { passive: true });
+
 function animate() {
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
 
 animate();
+attemptPlay();

@@ -10,7 +10,7 @@
 }
 
 body {
-  background: #ff0000;
+  background: transparent;
   color: #1a1a1a;
   height: 100vh;
   overflow: hidden;
@@ -21,79 +21,4 @@ body {
   height: 100vh;
   touch-action: none;
   width: 100vw;
-}
-
-#ui {
-  left: 0;
-  padding: 24px;
-  position: fixed;
-  top: 0;
-  width: min(420px, 90vw);
-  z-index: 2;
-}
-
-.panel {
-  backdrop-filter: blur(6px);
-  background: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 16px;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-  display: grid;
-  gap: 16px;
-  padding: 20px;
-}
-
-h1 {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-p {
-  font-size: 14px;
-  line-height: 1.5;
-  opacity: 0.85;
-}
-
-.button {
-  align-items: center;
-  background: #1e90ff;
-  border: none;
-  border-radius: 999px;
-  color: #fff;
-  cursor: pointer;
-  display: inline-flex;
-  font-size: 14px;
-  font-weight: 600;
-  gap: 8px;
-  justify-content: center;
-  padding: 10px 16px;
-  transition: transform 0.15s ease, opacity 0.15s ease;
-}
-
-.button.secondary {
-  background: rgba(0, 0, 0, 0.08);
-  color: #1a1a1a;
-}
-
-.button:hover {
-  transform: translateY(-1px);
-}
-
-.button input {
-  display: none;
-}
-
-.hint {
-  font-size: 12px;
-  opacity: 0.65;
-}
-
-@media (max-width: 600px) {
-  #ui {
-    padding: 16px;
-  }
-
-  .panel {
-    padding: 16px;
-  }
 }
