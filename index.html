@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>360° Видео внутри сферы</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <canvas id="scene"></canvas>
+
+    <video
+      id="video"
+      src="https://www.dropbox.com/scl/fi/54t2f4xgmnluvw9yq9ud8/IMG_4663-2.mp4?rlkey=5kp7skbmh801bwib1r4kfixny&st=ee4d148x&raw=1"
+      playsinline
+      muted
+      loop
+      autoplay
+      preload="auto"
+      crossorigin="anonymous"
+    ></video>
+
+    <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+    <script src="main.js"></script>
+  </body>
+</html>

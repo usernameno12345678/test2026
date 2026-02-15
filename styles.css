@@ -1,0 +1,24 @@
+:root {
+  color-scheme: light;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: transparent;
+  color: #1a1a1a;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#scene {
+  display: block;
+  height: 100vh;
+  touch-action: none;
+  width: 100vw;
+}
